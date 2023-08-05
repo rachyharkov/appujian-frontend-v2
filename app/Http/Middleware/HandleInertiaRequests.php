@@ -42,12 +42,12 @@ class HandleInertiaRequests extends Middleware
                     'user' => $request->user()
                         ? $request->user()
                         : null,
+                    'murid' => $request->user()
+                        ? $request->user()->murid
+                        : null,
                 ];
             },
             'flash' => session()->get('flash'),
-            'role' => function () use ($request) {
-                return $request->user() ? $request->user()?->roles : null;
-            },
         ]);
     }
 }

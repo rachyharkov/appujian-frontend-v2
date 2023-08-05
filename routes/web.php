@@ -3,6 +3,7 @@
 use App\Http\Controllers\MasterData\AnotherPageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MasterData\UserController;
+use App\Http\Controllers\UjianController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,9 +20,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::prefix('master-data')->group(function() {
-        Route::get('/', [UserController::class, 'index'])->name('master-data.index');
-        Route::resource('another-page', AnotherPageController::class);
-        Route::resource('users', UserController::class);
-    });
+    Route::post('/mulai-ujian', [UjianController::class, 'mulaiUjian'])->name('mulai-ujian');
 });

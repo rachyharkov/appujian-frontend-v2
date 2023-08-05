@@ -63,6 +63,46 @@ return [
             ]) : [],
         ],
 
+        'mysqldataujian' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_DATA_UJIAN', '127.0.0.1'),
+            'port' => env('DB_PORT_DATA_UJIAN', '3306'),
+            'database' => env('DB_DATABASE_DATA_UJIAN', 'forge'),
+            'username' => env('DB_USERNAME_DATA_UJIAN', 'forge'),
+            'password' => env('DB_PASSWORD_DATA_UJIAN', ''),
+            'unix_socket' => env('DB_SOCKET_DATA_UJIAN', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        'mysqlpusatdata' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_PUSAT_DATA', '127.0.0.1'),
+            'port' => env('DB_PORT_PUSAT_DATA', '3306'),
+            'database' => env('DB_DATABASE_PUSAT_DATA', 'forge'),
+            'username' => env('DB_USERNAME_PUSAT_DATA', 'forge'),
+            'password' => env('DB_PASSWORD_PUSAT_DATA', ''),
+            'unix_socket' => env('DB_SOCKET_PUSAT_DATA', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

@@ -5,15 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JawabanTemporary extends Model
+class ReviewRate extends Model
 {
     use HasFactory;
 
-    protected $table = 'jawaban_temporary';
+    protected $connection = 'mysqlpusatdata';
 
     protected $fillable = [
-        'id_murid',
-        'id_ujian',
-        'yang_udah_dikerjain',
+        'murid_id',
+        'kelas_id',
+        'rate',
+        'komentar',
     ];
+
+
 }

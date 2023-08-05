@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jawaban_temporaries', function (Blueprint $table) {
+        Schema::create('jawaban_temporary', function (Blueprint $table) {
             $table->id();
+            $table->string('id_murid');
+            $table->string('id_ujian');
+            $table->text('yang_udah_dikerjain')->nullable();
+            $table->boolean('is_finish')->default(false);
+            $table->boolean('is_nyontek')->default(false);
             $table->timestamps();
         });
     }
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jawaban_temporaries');
+        Schema::dropIfExists('jawaban_temporary');
     }
 };
