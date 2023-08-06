@@ -1,24 +1,93 @@
 <script setup>
-    import { Link, router } from '@inertiajs/vue3';
+    import { Link, router, usePage } from '@inertiajs/vue3';
     import AppHead from '@/Shared/Components/AppHead.vue';
     import Checkbox from '@/Shared/Components/Form/Checkbox.vue'
-import SoalPilihanGandaLayout from '@/Shared/Layout/SoalPilihanGandaLayout.vue';
-import SoalEssayLayout from '@/Shared/Layout/SoalEssayLayout.vue';
+    import SoalPilihanGandaLayout from '@/Shared/Layout/SoalPilihanGandaLayout.vue';
+    import SoalEssayLayout from '@/Shared/Layout/SoalEssayLayout.vue';
 
 </script>
 
 <script>
+
     export default {
         data() {
             return {
                 nomor: 0,
-                jawaban_murid: [],
+                jawaban_murid_pilgan: {},
+                jawaban_murid_essay: {},
+                timer_interval: null,
+                sisa_waktu: '',
+                sisa_waktu_unix: 0,
+                waktu_selesai: usePage().props.data_jadwal.waktu_selesai,
+                waktu_selesai_unix: new Date(usePage().props.data_jadwal.waktu_selesai).getTime(),
+            }
+        },
+        watch: {
+            jawaban_muridd: {
+                handler: function (val) {
+                    console.log(val)
+                },
+                deep: true
             }
         },
         methods: {
-            dijawab(jawaban) {
-                this.jawaban_murid[this.nomor] = jawaban;
+            dijawab(id_soal,type_soal, jawaban) {
+                // console.log(id_soal, jawaban)
+                if (type_soal == 'pilgan') {
+                    this.jawaban_murid_pilgan[id_soal] = jawaban
+                } else {
+                    this.jawaban_murid_essay[id_soal] = jawaban
+                }
+            },
+            onInterval() {
+
+                var countDownDate = new Date(this.waktu_selesai).getTime();
+
+                var now = new Date().getTime();
+                var distance = countDownDate - now;
+
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                hours = hours < 10 ? '0' + hours : hours;
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+
+                this.sisa_waktu = 'Sisa Waktu: ' + hours + ":" + minutes + ":" + seconds
+                // console.log(this.sisa_waktu)
+                // this.sisa_waktu = 'Sisa Waktu: ' + minutes + ":" + seconds
+                this.sisa_waktu_unix = distance
+
+                if (minutes <= 20 ) {
+                    document.getElementById('waktu').classList.add('bg-warning')
+                    // document.getElementById('waktu').style.setProperty('--alertColor', '#eab308')
+                }
+
+                if (minutes < 6) {
+                    document.getElementById('waktu').classList.remove('bg-warning')
+                    document.getElementById('waktu').classList.add('bg-danger')
+                    document.getElementById('waktu').style.setProperty('--alertColor', '#f87171')
+                }
+
+                // console.log(this.sisa_waktu)
+
+                if (this.sisa_waktu_unix < 0) {
+                    clearInterval(this.timer_interval)
+                    this.sisa_waktu = 'Waktu Habis'
+
+                    console.log('mengumpulkan jawaban...')
+                    // var last_jawaban = getJawabannya();
+                    // Livewire.emit('selesaikanUjian', last_jawaban);
+                }
             }
+        },
+        mounted() {
+            setInterval(this.onInterval, 1000)
+        },
+        components: {
+            AppHead,
+            SoalPilihanGandaLayout,
+            SoalEssayLayout
         }
     }
 </script>
@@ -28,15 +97,26 @@ import SoalEssayLayout from '@/Shared/Layout/SoalEssayLayout.vue';
     <div class="card mt-5">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-4 mb-5">
+                {{ jawaban_murid_essay }}
+                {{ jawaban_murid_pilgan }}
+                <div class="col-md-4 mb-5 position-relative">
+                    <div class="d-flex justify-content-between flex-row">
+                        <span class="badge bg-danger rounded-pill" id="waktu">{{ sisa_waktu }}</span>
+                        <span class="badge bg-primary rounded-pill">{{ Object.keys(jawaban_murid_pilgan).length + Object.keys(jawaban_murid_essay).length }} dari {{ $page.props.soals.length }} Terisi</span>
+                    </div>
+                    <hr class="my-3">
                     <div class="d-flex flex-justify-between gap-1">
                         <button v-for="i in $page.props.soals.length" :key="i" class="btn btn-primary" @click="nomor = i - 1">{{ i }}</button>
                     </div>
                 </div>
                 <div class="col-md-8 d-flex">
                     <span v-text="nomor + 1" class="me-3"></span>
-                    <SoalPilihanGandaLayout v-if="$page.props.soals[nomor].type_soal == 'pilgan'" :soal="$page.props.soals[nomor]" :jawaban_murid="jawaban_murid[nomor]" :nomor="nomor"  @dijawab="dijawab" :key="nomor"/>
-                    <SoalEssayLayout v-else :soal="$page.props.soals[nomor]" :jawaban_murid="jawaban_murid[nomor]" :nomor="nomor"  @dijawab="dijawab" :key="nomor"/>
+                    <template v-if="$page.props.soals[nomor].type_soal == 'pilgan'" >
+                        <SoalPilihanGandaLayout :soal="$page.props.soals[nomor]" :jawaban_murid="jawaban_murid_pilgan[$page.props.soals[nomor].id]" :nomor="nomor" @dijawab="dijawab" :key="nomor"/>
+                    </template>
+                    <template v-else>
+                        <SoalEssayLayout v-if="$page.props.soals[nomor].type_soal == 'essay'" :soal="$page.props.soals[nomor]" :jawaban_murid="jawaban_murid_essay[$page.props.soals[nomor].id]" :nomor="nomor"  @dijawab="dijawab" :key="nomor"/>
+                    </template>
                 </div>
             </div>
         </div>
@@ -47,3 +127,33 @@ import SoalEssayLayout from '@/Shared/Layout/SoalEssayLayout.vue';
         </div>
     </div>
 </template>
+
+<style scoped>
+    .animasi-ping::after {
+        border-radius: 4px;
+        left: 0;
+        z-index: 0;
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        position: absolute;
+        margin: 0 auto;
+        background: var(--alertColor);
+        opacity: 0;
+        animation: ping 1s ease-out infinite;
+    }
+
+    @keyframes ping {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        75%, 100% {
+            transform: scale(1.1);
+            opacity: 0;
+        }
+    }
+
+</style>

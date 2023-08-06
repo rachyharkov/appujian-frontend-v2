@@ -35,7 +35,8 @@ class UjianController extends Controller
 
         return Inertia::render('SedangMengerjakan/Index', [
             'soals' => $this->ujianService->getSoals($findJadwalUjian->ujian_id),
-            'data_ujian' => $dataUjian
+            'data_ujian' => $dataUjian,
+            'data_jadwal' => $findJadwalUjian,
         ]);
     }
 
