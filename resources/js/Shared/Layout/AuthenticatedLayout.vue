@@ -1,7 +1,20 @@
 <script setup>
-import Sidebar from './Partial/Sidebar.vue';
+import flasher from '@flasher/flasher';
 import Header from './Partial/Header.vue';
 import Footer from './Partial/Footer.vue';
+</script>
+
+<script>
+    export default {
+        props: {
+            messages: Object,
+        },
+        watch: {
+            messages(value) {
+                flasher.render(value);
+            }
+        }
+    }
 </script>
 
 <template>

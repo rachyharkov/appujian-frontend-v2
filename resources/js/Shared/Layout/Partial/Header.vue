@@ -2,12 +2,25 @@
 import { Link } from '@inertiajs/vue3';
 </script>
 
+<script>
+    export default {
+        data() {
+            return {
+                is_syncing: false
+            }
+        },
+    }
+</script>
+
 <template>
     <header>
         <nav class="navbar navbar-light">
             <div class="container d-block">
                 <a href="index.html"><i class="bi bi-chevron-left"></i></a>
-                <a class="navbar-brand ms-4" href="index.html"><h4 class="d-inline-block">e-Ujian</h4></a>
+                <a class="navbar-brand ms-4" href="index.html">
+                    <h4 class="d-inline-block" v-if="$page.props.data_ujian != undefined">{{ $page.props.data_ujian.nama }}</h4>
+                    <h4 class="d-inline-block" v-else>e-Ujian</h4>
+                </a>
                 <div class="dropdown float-end">
                     <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
                         <div class="user-menu d-flex">
@@ -19,6 +32,14 @@ import { Link } from '@inertiajs/vue3';
                                 <div class="avatar avatar-md">
                                     <img src="/assets/static/images/faces/1.jpg">
                                 </div>
+                                <div v-if="is_syncing" style="width: 17px; height: 17px; right: 5px; bottom: -1px" class="bg-warning rounded-circle position-absolute text-primary z-index-1 anim-rotate">
+                                    <i class="bi bi-arrow-repeat text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"
+                                    ></i>
+                                </div>
+                                <div v-else style="width: 17px; height: 17px; right: 5px; bottom: -1px" class="bg-success rounded-circle position-absolute text-primary z-index-1">
+                                    <i class="bi bi-check text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"
+                                    ></i>
+                                </div>
                             </div>
                         </div>
                     </a>
@@ -26,6 +47,8 @@ import { Link } from '@inertiajs/vue3';
                         style="min-width: 11rem;">
                         <li>
                             <h6 class="dropdown-header">Halo, {{ $page.props.auth.murid.nama }}</h6>
+                            <p class="dropdown-header" v-if="is_syncing">Progress kamu sedang disinkronisasi, silahkan kerjakan ujian mu seperti biasa ya...</p>
+                            <p class="dropdown-header" v-else>Progress kamu sudah disinkronisasi, tidak perlu khawatir jawaban hilang 🥳</p>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
@@ -40,3 +63,19 @@ import { Link } from '@inertiajs/vue3';
     </header>
 
 </template>
+
+<style scoped>
+    .anim-rotate {
+        animation: rotate 2s linear infinite;
+    }
+
+    @keyframes rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg)
+        }
+    }
+</style>

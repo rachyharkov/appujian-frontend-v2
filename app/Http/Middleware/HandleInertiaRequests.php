@@ -47,7 +47,7 @@ class HandleInertiaRequests extends Middleware
                         : null,
                 ];
             },
-            'flash' => session()->get('flash'),
+            'messages' => flash()->render([], 'array')
         ]);
     }
 }
