@@ -34,9 +34,13 @@
             dijawab(id_soal,type_soal, jawaban) {
                 // console.log(id_soal, jawaban)
                 if (type_soal == 'pilgan') {
-                    this.jawaban_murid_pilgan[id_soal] = jawaban
+                    this.jawaban_murid_pilgan[id_soal] = {
+                        jawaban: jawaban
+                    }
                 } else {
-                    this.jawaban_murid_essay[id_soal] = jawaban
+                    this.jawaban_murid_essay[id_soal] = {
+                        jawaban: jawaban
+                    }
                 }
             },
             onInterval() {
@@ -83,7 +87,15 @@
         },
         watch: {
             nomor: function (val) {
-                dynamicEventBus.emit('syncProgressHeader', 'testis'); // emit event to update progress header component
+                dynamicEventBus.emit('syncProgressHeader', {
+                    jawaban_murid: {
+                        pilgan: this.jawaban_murid_pilgan,
+                        essay: this.jawaban_murid_essay
+                    },
+                    id_murid: usePage().props.auth.murid.id_murid,
+                    id_ujian: usePage().props.data_jadwal.ujian_id,
+                    logged_at: new Date().getTime()
+                }); // emit event to update progress header component
             }
         },
         components: {
@@ -114,10 +126,10 @@
                 <div class="col-md-8 d-flex">
                     <span v-text="nomor + 1" class="me-3"></span>
                     <template v-if="$page.props.soals[nomor].type_soal == 'pilgan'" >
-                        <SoalPilihanGandaLayout :soal="$page.props.soals[nomor]" :jawaban_murid="jawaban_murid_pilgan[$page.props.soals[nomor].id]" :nomor="nomor" @dijawab="dijawab" :key="nomor"/>
+                        <SoalPilihanGandaLayout :soal="$page.props.soals[nomor]" :jawaban_murid="jawaban_murid_pilgan[$page.props.soals[nomor].id]?.jawaban" :nomor="nomor" @dijawab="dijawab" :key="nomor"/>
                     </template>
                     <template v-else>
-                        <SoalEssayLayout v-if="$page.props.soals[nomor].type_soal == 'essay'" :soal="$page.props.soals[nomor]" :jawaban_murid="jawaban_murid_essay[$page.props.soals[nomor].id]" :nomor="nomor"  @dijawab="dijawab" :key="nomor"/>
+                        <SoalEssayLayout v-if="$page.props.soals[nomor].type_soal == 'essay'" :soal="$page.props.soals[nomor]" :jawaban_murid="jawaban_murid_essay[$page.props.soals[nomor].id]?.jawaban" :nomor="nomor" @dijawab="dijawab" :key="nomor"/>
                     </template>
                 </div>
             </div>

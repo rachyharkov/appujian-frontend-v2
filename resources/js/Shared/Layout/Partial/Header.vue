@@ -2,26 +2,33 @@
     import { onMounted, onUnmounted, ref } from 'vue'
     import { Link } from '@inertiajs/vue3';
     import dynamicEventBus from '@/utils/helper/dynamicEventBus.js';
+    import syncProgress from '@/utils/helper/syncProgress.js';
 
     export default {
         data() {
             return {
                 is_syncing: false,
                 sync_result: null,
-                test: 'test',
             }
         },
         methods: {
-            syncProgress(data) {
-                console.log(data)
-                console.log('syncProgress')
+            syncProgressnya(data) {
                 this.is_syncing = true
                 this.sync_result = null
 
-                setTimeout(() => {
+                syncProgress(data).then((res) => {
+
+                    if(res.code == 'ERR_NETWORK') {
+                        this.sync_result = 'failed'
+                    } else {
+                        this.sync_result = 'success'
+                    }
                     this.is_syncing = false
-                    this.sync_result = 'success'
-                }, 2000)
+                }).catch((err) => {
+                    this.is_syncing = false
+                    this.sync_result = 'failed'
+                    console.log(err)
+                })
                 // this.is_syncing = true;
                 // this.sync_result = null;
                 // this.$inertia.post('/sedang-mengerjakan/sync-progress', {}, {
@@ -47,10 +54,10 @@
         },
         mounted() {
             // console.log(this.emitter)
-            dynamicEventBus.on('syncProgressHeader', e => this.syncProgress(e));
+            dynamicEventBus.on('syncProgressHeader', e => this.syncProgressnya(e));
         },
         unmounted() {
-            dynamicEventBus.off('syncProgressHeader',e => this.syncProgress(e));
+            dynamicEventBus.off('syncProgressHeader',e => this.syncProgressnya(e));
         }
     }
 </script>

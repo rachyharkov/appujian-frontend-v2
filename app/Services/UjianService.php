@@ -58,16 +58,21 @@ class UjianService implements UjianInterface
 
 
         if(!$findSesi) {
-            JawabanTemporary::create([
-                'id_murid' => $id_murid,
-                'id_ujian' => $id_ujian,
-                'yang_udah_dikerjain' => json_encode([]),
-            ]);
-
             return 'baru_mulai';
         }
 
         return 'melanjutkan_pengerjaan';
+    }
+
+    public function buatSesiUjianBaru($id_murid, $id_ujian)
+    {
+        JawabanTemporary::create([
+            'id_murid' => $id_murid,
+            'id_ujian' => $id_ujian,
+            'yang_udah_dikerjain' => json_encode([]),
+        ]);
+
+        return true;
     }
 
     public function getSoals($id_ujian)
