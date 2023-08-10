@@ -5,7 +5,7 @@
     import SoalPilihanGandaLayout from '@/Shared/Layout/SoalPilihanGandaLayout.vue';
     import SoalEssayLayout from '@/Shared/Layout/SoalEssayLayout.vue';
     import dynamicEventBus from '@/utils/helper/dynamicEventBus.js';
-    import { checkProgress } from '@/utils/helper/syncProgress.js';
+    import { checkProgress, finishExam } from '@/utils/helper/syncProgress.js';
     import Swal from 'sweetalert2';
 </script>
 
@@ -54,7 +54,31 @@
                     confirmButtonText: 'Ya, selesai ujian!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        this.selesaiUjian()
+                        Swal.fire({
+                            title: 'Mohon Tunggu',
+                            html: 'Sedang menyimpan pengerjaan',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            },
+                        });
+
+                        router.visit(route('finish-exam'), {
+                            method: 'post',
+                            data: {
+                                jawaban_murid: {
+                                    pilgan: this.jawaban_murid_pilgan,
+                                    essay: this.jawaban_murid_essay
+                                },
+                                id_murid: usePage().props.auth.murid.id_murid,
+                                id_ujian: usePage().props.data_jadwal.ujian_id,
+                                logged_at: new Date().getTime()
+                            },
+                            replace: true,
+                            onFinish: () => {
+                                Swal.close()
+                            }
+                        })
                     }
                 })
             },

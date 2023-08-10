@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JawabanTemporary;
 use App\Services\UjianService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProgressUjianController extends Controller
 {

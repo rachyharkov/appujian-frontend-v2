@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JadwalUjian;
+use App\Models\JawabanTemporary;
 use App\Models\Ujian;
 use App\Services\UjianService;
 use Illuminate\Http\Request;
@@ -26,6 +27,17 @@ class UjianController extends Controller
             'data_ujian' => $dataUjian,
             'data_jadwal' => $findJadwalUjian,
         ]);
+    }
+
+
+    public function finishExam(Request $request) {
+        $findSesi = JawabanTemporary::where('id_murid', $request->id_murid)->where('id_ujian', $request->id_ujian)->get()->first();
+
+        $findSesi->update([
+            'yang_udah_dikerjain' => json_encode($request->jawaban_murid),
+        ]);
+
+        return Inertia::render('Selesai/Index');
     }
 
 }

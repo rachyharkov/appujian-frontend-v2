@@ -19,3 +19,12 @@ export async function checkProgress(data) {
         return error;
     }
 }
+
+export async function finishExam(data) {
+    try {
+        const response = await axios.post('/api/finish-exam', data);
+        return response.data;
+    } catch (error) {
+        return error;
+    }
+}
