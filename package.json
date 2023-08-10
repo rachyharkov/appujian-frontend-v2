@@ -17,6 +17,7 @@
         "@vitejs/plugin-vue": "^4.2.3",
         "bootstrap": "5.2.3",
         "bootstrap-icons": "^1.10.2",
+        "mitt": "^3.0.1",
         "vue": "^3.2.36",
         "vue-loader": "^17.0.1"
     },

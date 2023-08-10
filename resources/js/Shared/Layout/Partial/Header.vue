@@ -1,14 +1,57 @@
-<script setup>
-import { Link } from '@inertiajs/vue3';
-</script>
-
 <script>
+    import { onMounted, onUnmounted, ref } from 'vue'
+    import { Link } from '@inertiajs/vue3';
+    import dynamicEventBus from '@/utils/helper/dynamicEventBus.js';
+
     export default {
         data() {
             return {
-                is_syncing: false
+                is_syncing: false,
+                sync_result: null,
+                test: 'test',
             }
         },
+        methods: {
+            syncProgress(data) {
+                console.log(data)
+                console.log('syncProgress')
+                this.is_syncing = true
+                this.sync_result = null
+
+                setTimeout(() => {
+                    this.is_syncing = false
+                    this.sync_result = 'success'
+                }, 2000)
+                // this.is_syncing = true;
+                // this.sync_result = null;
+                // this.$inertia.post('/sedang-mengerjakan/sync-progress', {}, {
+                //     onStart: () => {
+                //         this.is_syncing = true;
+                //         this.sync_result = null;
+                //     },
+                //     onProgress: (event) => {
+                //         console.log(event)
+                //     },
+                //     onSuccess: (page) => {
+                //         this.is_syncing = false;
+                //         this.sync_result = 'success';
+                //         console.log(page)
+                //     },
+                //     onError: (error) => {
+                //         this.is_syncing = false;
+                //         this.sync_result = 'failed';
+                //         console.log(error)
+                //     },
+                // })
+            }
+        },
+        mounted() {
+            // console.log(this.emitter)
+            dynamicEventBus.on('syncProgressHeader', e => this.syncProgress(e));
+        },
+        unmounted() {
+            dynamicEventBus.off('syncProgressHeader',e => this.syncProgress(e));
+        }
     }
 </script>
 
@@ -19,7 +62,7 @@ import { Link } from '@inertiajs/vue3';
                 <a href="index.html"><i class="bi bi-chevron-left"></i></a>
                 <a class="navbar-brand ms-4" href="index.html">
                     <h4 class="d-inline-block" v-if="$page.props.data_ujian != undefined">{{ $page.props.data_ujian.nama }}</h4>
-                    <h4 class="d-inline-block" v-else>e-Ujian</h4>
+                    <h4 class="d-inline-block" v-else>e-Ujian {{eventData}}</h4>
                 </a>
                 <div class="dropdown float-end">
                     <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
@@ -36,8 +79,12 @@ import { Link } from '@inertiajs/vue3';
                                     <i class="bi bi-arrow-repeat text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"
                                     ></i>
                                 </div>
-                                <div v-else style="width: 17px; height: 17px; right: 5px; bottom: -1px" class="bg-success rounded-circle position-absolute text-primary z-index-1">
+                                <div v-if="sync_result == 'success' " style="width: 17px; height: 17px; right: 5px; bottom: -1px" class="bg-success rounded-circle position-absolute text-primary z-index-1">
                                     <i class="bi bi-check text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"
+                                    ></i>
+                                </div>
+                                <div v-if="sync_result == 'failed' " style="width: 17px; height: 17px; right: 5px; bottom: -1px" class="bg-danger rounded-circle position-absolute text-primary z-index-1">
+                                    <i class="bi bi-x text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"
                                     ></i>
                                 </div>
                             </div>
@@ -47,8 +94,9 @@ import { Link } from '@inertiajs/vue3';
                         style="min-width: 11rem;">
                         <li>
                             <h6 class="dropdown-header">Halo, {{ $page.props.auth.murid.nama }}</h6>
-                            <p class="dropdown-header" v-if="is_syncing">Progress kamu sedang disinkronisasi, silahkan kerjakan ujian mu seperti biasa ya...</p>
-                            <p class="dropdown-header" v-else>Progress kamu sudah disinkronisasi, tidak perlu khawatir jawaban hilang 🥳</p>
+                            <p class="dropdown-header p-custom" v-if="is_syncing">Progress kamu sedang disinkronisasi, silahkan kerjakan ujian mu seperti biasa ya...</p>
+                            <p class="dropdown-header p-custom" v-if="sync_result == 'success'">Progress kamu sudah disinkronisasi, tidak perlu khawatir jawaban hilang 🥳</p>
+                            <p class="dropdown-header p-custom" v-if="sync_result == 'failed'">Terjadi kesalahan, tetap selesaikan ujian seperti biasa yaa karena progress kamu tersimpan di perangkat untuk sementara 🥺 (informasi lebih lanjut hubungi pengawas)</p>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
@@ -78,4 +126,12 @@ import { Link } from '@inertiajs/vue3';
             transform: rotate(360deg)
         }
     }
+
+    .p-custom {
+        width: 300px;
+        white-space: break-spaces;
+        text-wrap: balance;
+    }
 </style>
+@/utils/helper/localEventBus
+@/utils/helper/dynamicEventBus.js

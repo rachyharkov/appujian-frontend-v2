@@ -4,7 +4,7 @@
     import Checkbox from '@/Shared/Components/Form/Checkbox.vue'
     import SoalPilihanGandaLayout from '@/Shared/Layout/SoalPilihanGandaLayout.vue';
     import SoalEssayLayout from '@/Shared/Layout/SoalEssayLayout.vue';
-
+    import dynamicEventBus from '@/utils/helper/dynamicEventBus.js';
 </script>
 
 <script>
@@ -81,8 +81,10 @@
                 }
             }
         },
-        mounted() {
-            setInterval(this.onInterval, 1000)
+        watch: {
+            nomor: function (val) {
+                dynamicEventBus.emit('syncProgressHeader', 'testis'); // emit event to update progress header component
+            }
         },
         components: {
             AppHead,
@@ -97,8 +99,6 @@
     <div class="card mt-5">
         <div class="card-body">
             <div class="row">
-                {{ jawaban_murid_essay }}
-                {{ jawaban_murid_pilgan }}
                 <div class="col-md-4 mb-5 position-relative">
                     <div class="d-flex justify-content-between flex-row">
                         <span class="badge bg-danger rounded-pill" id="waktu">{{ sisa_waktu }}</span>
@@ -106,7 +106,9 @@
                     </div>
                     <hr class="my-3">
                     <div class="d-flex flex-justify-between gap-1">
-                        <button v-for="i in $page.props.soals.length" :key="i" class="btn btn-primary" @click="nomor = i - 1">{{ i }}</button>
+                        <button v-for="i in $page.props.soals.length" :key="i" class="btn"
+                        :class="{'btn-primary': nomor == i - 1, 'btn-outline-primary': nomor != i - 1}"
+                        @click="nomor = i - 1">{{ i }}</button>
                     </div>
                 </div>
                 <div class="col-md-8 d-flex">
@@ -157,3 +159,5 @@
     }
 
 </style>
+@/utils/helper/localEventBus
+@/utils/helper/dynamicEventBus.js@/utils/helper/dynamicEventBus.js

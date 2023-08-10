@@ -11,9 +11,6 @@ defineEmits(['dijawab'])
 </script>
 <template>
     <div class="container overflow-auto">
-        <div>Jawaban Loe {{ jawaban_murid }}</div>
-        <div>tipe soal {{ soal.type_soal }}</div>
-        <div>id soal {{ soal.id }}</div>
         <img v-if="soal.image" :src="soal.image" class="w-full h-auto rounded-lg" alt="">
         <div v-html="soal.soal"></div>
         <div class="form-check" v-for="(pilihan, index) in JSON.parse(soal.pilihan)" :key="index">
