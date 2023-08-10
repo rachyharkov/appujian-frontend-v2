@@ -29,15 +29,13 @@ class UjianController extends Controller
         ]);
     }
 
-
-    public function finishExam(Request $request) {
-        $findSesi = JawabanTemporary::where('id_murid', $request->id_murid)->where('id_ujian', $request->id_ujian)->get()->first();
-
-        $findSesi->update([
-            'yang_udah_dikerjain' => json_encode($request->jawaban_murid),
-        ]);
-
+    public function finish_exam(Request $request)
+    {
+        $this->ujianService->selesaiUjian(
+            $request->id_murid,
+            $request->id_ujian,
+            $request->jawaban_murid
+        );
         return Inertia::render('Selesai/Index');
     }
-
 }

@@ -22,5 +22,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::post('/mengerjakan', [UjianController::class, 'index'])->name('mengerjakan');
-    Route::post('/finish-exam', [UjianController::class, 'finishExam'])->name('finish-exam');
+    Route::post('/selesai', [UjianController::class, 'finish_exam'])->name('finish-exam');
 });

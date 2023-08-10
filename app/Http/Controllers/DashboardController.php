@@ -24,4 +24,15 @@ class DashboardController extends Controller
             }),
         ]);
     }
+
+    public function finish_exam(Request $request)
+    {
+        $this->ujianService->selesaiUjian(
+            $request->id_murid,
+            $request->id_ujian,
+            $request->jawaban_murid
+        );
+
+        return Inertia::render('Selesai/Index');
+    }
 }

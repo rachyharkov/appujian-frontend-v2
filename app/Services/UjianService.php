@@ -102,4 +102,12 @@ class UjianService implements UjianInterface
 
         return $dataSoalUjian;
     }
+
+    public function selesaiUjian($id_murid, $id_ujian, $data_jawaban) {
+        $findSesi = JawabanTemporary::where('id_murid', $id_murid)->where('id_ujian', $id_ujian)->get()->first();
+
+        $findSesi->update([
+            'yang_udah_dikerjain' => json_encode($data_jawaban),
+        ]);
+    }
 }

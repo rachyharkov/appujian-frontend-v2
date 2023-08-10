@@ -83,17 +83,17 @@
             </div>
         </div>
         <div class="card-footer text-center">
-            <Link :href="route('dashboard')" :only="['data_ujian']" method="post" as="button" class="btn btn-primary btn-lg px-5" :disabled="!isReady" v-if="!isInProgress && (page.props.data_ujian == undefined || page.props.data_ujian == false)">Lanjutkan</Link>
+            <Link :href="route('dashboard')" :only="['data_ujian']" method="post" as="button" class="btn btn-primary btn-lg px-5" :disabled="!isReady" :replace="true" v-if="!isInProgress && (page.props.data_ujian == undefined || page.props.data_ujian == false)">Lanjutkan</Link>
             <div v-if="page.props.data_ujian">
 
                 <Link :href="route('mengerjakan')" method="post" as="button" class="btn btn-primary btn-lg px-5" :disabled="!isReady" v-if="!isInProgress && page.props.data_ujian.status === 1"
                 :data="{
                     id_murid: page.props.auth.murid.id,
                     id_jadwal: page.props.data_ujian.id_jadwal
-                }"
+                }" :replace="true"
                 >Mulai Ujian</Link>
 
-                <Link :href="route('dashboard')" :only="['data_ujian']" method="post" as="button" class="btn btn-primary btn-lg px-5" :disabled="!isReady" v-if="!isInProgress && page.props.data_ujian.status === 0">Coba Lagi</Link>
+                <Link :href="route('dashboard')" :only="['data_ujian']" method="post" as="button" class="btn btn-primary btn-lg px-5" :disabled="!isReady" v-if="!isInProgress && page.props.data_ujian.status === 0" :replace="true">Coba Lagi</Link>
             </div>
             <span class="text-muted" v-if="isInProgress">Mencari jadwal...</span>
         </div>
