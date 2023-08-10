@@ -5,6 +5,7 @@
     import SoalPilihanGandaLayout from '@/Shared/Layout/SoalPilihanGandaLayout.vue';
     import SoalEssayLayout from '@/Shared/Layout/SoalEssayLayout.vue';
     import dynamicEventBus from '@/utils/helper/dynamicEventBus.js';
+    import { checkProgress } from '@/utils/helper/syncProgress.js';
 </script>
 
 <script>
@@ -97,6 +98,20 @@
                     logged_at: new Date().getTime()
                 }); // emit event to update progress header component
             }
+        },
+        mounted() {
+            // this.timer_interval = setInterval(this.onInterval, 1000);
+            checkProgress(
+                {
+                    id_murid: usePage().props.auth.murid.id_murid,
+                    id_ujian: usePage().props.data_jadwal.ujian_id,
+                }
+            ).then((resp) => {
+                const yang_udah_dikerjain = JSON.parse(resp.data.yang_udah_dikerjain)
+
+                this.jawaban_murid_essay = yang_udah_dikerjain.essay
+                this.jawaban_murid_pilgan = yang_udah_dikerjain.pilgan
+            })
         },
         components: {
             AppHead,

@@ -20,3 +20,4 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::post('/sync-progress', [ProgressUjianController::class, 'store'])->name('api.sync-progress');
+Route::post('/check-progress', [ProgressUjianController::class, 'show'])->name('api.check-progress');

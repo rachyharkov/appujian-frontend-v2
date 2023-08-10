@@ -2,7 +2,7 @@
     import { onMounted, onUnmounted, ref } from 'vue'
     import { Link } from '@inertiajs/vue3';
     import dynamicEventBus from '@/utils/helper/dynamicEventBus.js';
-    import syncProgress from '@/utils/helper/syncProgress.js';
+    import { syncProgress } from '@/utils/helper/syncProgress.js';
 
     export default {
         data() {
