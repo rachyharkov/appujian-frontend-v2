@@ -2,6 +2,8 @@ import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import bootstrapBundle from "bootstrap/dist/js/bootstrap.bundle"
 import AuthenticatedLayout from '@/Shared/Layout/AuthenticatedLayout.vue'
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import './utils/components/sidebar.js'
 import './utils/components/dark.js'
 import '../../public/assets/static/js/components/dark.js'
@@ -23,6 +25,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
+            .use(VueSweetalert2)
             .mixin({ methods: { route } })
             .mount(el)
     },

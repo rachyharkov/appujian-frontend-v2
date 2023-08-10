@@ -6,6 +6,7 @@
     import SoalEssayLayout from '@/Shared/Layout/SoalEssayLayout.vue';
     import dynamicEventBus from '@/utils/helper/dynamicEventBus.js';
     import { checkProgress } from '@/utils/helper/syncProgress.js';
+    import Swal from 'sweetalert2';
 </script>
 
 <script>
@@ -43,6 +44,19 @@
                         jawaban: jawaban
                     }
                 }
+            },
+            confirmSelesaiUjian() {
+                Swal.fire({
+                    title: 'Apakah anda yakin?',
+                    text: "Anda tidak akan bisa mengubah jawaban setelah menekan tombol selesai ujian!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, selesai ujian!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.selesaiUjian()
+                    }
+                })
             },
             onInterval() {
 
@@ -152,7 +166,7 @@
         <div class="card-footer d-flex flex-row gap-3 justify-content-end">
             <button class="btn btn-primary" @click="nomor = nomor - 1" v-if="nomor > 0">Sebelumnya</button>
             <button class="btn btn-primary" @click="nomor = nomor + 1" v-if="nomor < $page.props.soals.length - 1">Selanjutnya</button>
-            <button class="btn btn-success" v-if="nomor == $page.props.soals.length - 1" @click="$inertia.post(route('murid.selesai_ujian', $page.props.data_ujian.id), {jawaban_murid: jawaban_murid})">Selesai</button>
+            <button class="btn btn-success" v-if="nomor == $page.props.soals.length - 1" @click="confirmSelesaiUjian">Selesai</button>
         </div>
     </div>
 </template>
