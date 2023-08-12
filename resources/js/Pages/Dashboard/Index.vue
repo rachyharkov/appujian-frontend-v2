@@ -21,8 +21,6 @@
     router.on('finish', () => {
         isInProgress.value = false;
     })
-
-
 </script>
 <template>
     <AppHead title="Dashboard" />

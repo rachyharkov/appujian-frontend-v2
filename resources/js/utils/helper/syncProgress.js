@@ -34,3 +34,9 @@ export async function finishExam(data) {
         return error;
     }
 }
+
+export function clean_local() {
+    localStorage.removeItem('progress');
+    localStorage.removeItem('id_murid');
+    localStorage.removeItem('id_ujian');
+}
