@@ -3,9 +3,14 @@
     import { Link } from '@inertiajs/vue3';
     import dynamicEventBus from '@/utils/helper/dynamicEventBus.js';
     import { syncProgress } from '@/utils/helper/syncProgress.js';
-    import FotoProfil from '/public/assets/static/images/faces/1.jpg'
+    import photoProfileDummy from '/public/assets/static/images/faces/1.jpg';
 
     export default {
+        setup() {
+            return {
+                photoProfileDummy,
+            }
+        },
         data() {
             return {
                 is_syncing: false,
@@ -86,7 +91,7 @@
                             </div>
                             <div class="user-img d-flex align-items-center">
                                 <div class="avatar avatar-md">
-                                    <img :src="FotoProfil">
+                                    <img :src="photoProfileDummy">
                                 </div>
                                 <div v-if="is_syncing" style="width: 17px; height: 17px; right: 5px; bottom: -1px" class="bg-warning rounded-circle position-absolute text-primary z-index-1 anim-rotate">
                                     <i class="bi bi-arrow-repeat text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"></i>
