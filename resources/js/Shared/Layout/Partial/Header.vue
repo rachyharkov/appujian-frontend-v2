@@ -97,7 +97,7 @@
                                     ></i>
                                 </div>
                                 <div v-if="sync_result == 'failed' " style="width: 17px; height: 17px; right: 5px; bottom: -1px" class="bg-danger rounded-circle position-absolute text-primary z-index-1">
-                                    <i class="bi bi-x text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"
+                                    <i class="bi bi-cloud-slash-fill text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"
                                     ></i>
                                 </div>
                             </div>

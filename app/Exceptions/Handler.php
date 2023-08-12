@@ -27,4 +27,16 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $e)
+    {
+        $response = parent::render($request, $e);
+
+        if($response->getStatusCode() === 419) {
+            flash()->addInfo('Sesi kamu telah habis, silahkan refresh halaman ini atau coba lagi', 'Oops! Sesi Habis');
+            return back();
+        }
+
+        return $response;
+    }
 }
