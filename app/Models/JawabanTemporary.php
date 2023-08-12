@@ -15,5 +15,6 @@ class JawabanTemporary extends Model
         'id_murid',
         'id_ujian',
         'yang_udah_dikerjain',
+        'is_finish'
     ];
 }

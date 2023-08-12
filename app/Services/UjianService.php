@@ -38,7 +38,9 @@ class UjianService implements UjianInterface
     {
         $dataUjian = Ujian::where('id', $dataJadwalUjian->ujian_id)->get()->first();
 
-        return [
+        $sesi = $this->cekStatusPengerjaan(auth()->user()->id_murid, $dataJadwalUjian->ujian_id);
+
+        $data = [
             'nama_ujian' => $dataUjian->nama,
             'mata_pelajaran' => MataPelajaran::where('id', $dataUjian->mata_pelajaran_id)->get()->first()->nama,
             'waktu_mulai' => $dataJadwalUjian->waktu_mulai,
@@ -46,8 +48,20 @@ class UjianService implements UjianInterface
             'durasi' => Carbon::parse($dataJadwalUjian->waktu_mulai)->diffInMinutes($dataJadwalUjian->waktu_selesai),
             'status' => $dataUjian->status,
             'id_jadwal' => $dataJadwalUjian->id,
-            'sesi' => $this->cekStatusPengerjaan(auth()->user()->id_murid, $dataJadwalUjian->id),
+            'sesi' => $sesi,
         ];
+
+        if($sesi == 'sudah_selesai') {
+            $data['waktu_selesai_pengerjaan'] = JawabanTemporary::where(
+                'id_murid',
+                auth()->user()->id_murid
+            )->where(
+                'id_ujian',
+                $dataJadwalUjian->ujian_id
+            )->get()->first()->updated_at->format('Y-m-d H:i:s');
+
+        }
+        return $data;
     }
 
     public function cekStatusPengerjaan($id_murid, $id_ujian)
@@ -59,6 +73,10 @@ class UjianService implements UjianInterface
 
         if(!$findSesi) {
             return 'baru_mulai';
+        }
+
+        if($findSesi->is_finish == 1) {
+            return 'sudah_selesai';
         }
 
         return 'melanjutkan_pengerjaan';
@@ -108,6 +126,7 @@ class UjianService implements UjianInterface
 
         $findSesi->update([
             'yang_udah_dikerjain' => json_encode($data_jawaban),
+            'is_finish' => true,
         ]);
     }
 }

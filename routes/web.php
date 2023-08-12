@@ -22,5 +22,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::post('/mengerjakan', [UjianController::class, 'index'])->name('mengerjakan');
+    Route::get('/mengerjakan', function () {
+        return redirect()->route('dashboard');
+    });
     Route::post('/selesai', [UjianController::class, 'finish_exam'])->name('finish-exam');
 });

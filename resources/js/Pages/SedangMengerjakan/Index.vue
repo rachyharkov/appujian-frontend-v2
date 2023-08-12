@@ -7,6 +7,7 @@
     import dynamicEventBus from '@/utils/helper/dynamicEventBus.js';
     import { checkProgress, finishExam } from '@/utils/helper/syncProgress.js';
     import Swal from 'sweetalert2';
+    import { toastAlert } from '@/utils/helper/sweetalert';
 </script>
 
 <script>
@@ -145,10 +146,42 @@
                     id_ujian: usePage().props.data_jadwal.ujian_id,
                 }
             ).then((resp) => {
-                const yang_udah_dikerjain = JSON.parse(resp.data.yang_udah_dikerjain)
+                if(localStorage.getItem('progress') != null) {
+                    const progress = JSON.parse(localStorage.getItem('progress'))
+                    this.jawaban_murid_essay = progress.essay
+                    this.jawaban_murid_pilgan = progress.pilgan
+                    toastAlert({
+                        title: 'Progress Dipulihkan',
+                        text: 'Perangkat kamu menyimpan progress terakhir pengerjaan',
+                        icon: 'success'
+                    })
+                } else {
 
-                this.jawaban_murid_essay = yang_udah_dikerjain.essay
-                this.jawaban_murid_pilgan = yang_udah_dikerjain.pilgan
+                    const yang_udah_dikerjain = JSON.parse(resp.data.yang_udah_dikerjain)
+
+                    this.jawaban_murid_essay = yang_udah_dikerjain.essay
+                    this.jawaban_murid_pilgan = yang_udah_dikerjain.pilgan
+
+                    toastAlert({
+                        title: 'Progress Dipulihkan',
+                        text: 'Mengambil dari server, selamat mengerjakan',
+                        icon: 'success'
+                    })
+                }
+
+            }).catch((err) => {
+                if(localStorage.getItem('progress') != null) {
+                    const progress = JSON.parse(localStorage.getItem('progress'))
+                    this.jawaban_murid_essay = progress.essay
+                    this.jawaban_murid_pilgan = progress.pilgan
+                    toastAlert({
+                        title: 'Progress Dipulihkan',
+                        text: 'Kesalahan saat mengambil dari server, progress terakhir pengerjaan dipulihkan dari perangkat',
+                        icon: 'success'
+                    })
+                }
+
+                console.log(err)
             })
         },
         components: {

@@ -36,9 +36,14 @@
                 <p> Halo <b>{{ page.props.auth.murid.nama }}</b>, Selamat Datang di portal ujian! kamu sudah berhasil login ya, silahkan dengarkan instruksi dari pengawas dengan seksama. Jika sudah siap, centang kotak dibawah ini untuk menyatakan bahwa kamu siap untuk melaksanakan ujian, lalu klik tombol lanjutkan.</p>
             </div>
 
-            <div class="alert alert-primary my-3" v-if="page.props.data_ujian?.status === 1">
+            <div class="alert alert-primary my-3" v-if="page.props.data_ujian?.status === 1 && $page.props.data_ujian?.sesi != 'sudah_selesai'">
                 <h4 class="alert-heading"><i class="bi bi-stars me-2"></i>Siap Ujian?</h4>
                 <p>Silahkan cek dulu informasi mengenai ujian yang akan mulai, jika sudah siap, klik tombol mulai ujian. Semoga lancar dan sukses yaa 😄🫶!</p>
+            </div>
+
+            <div class="alert alert-primary my-3" v-if="$page.props.data_ujian?.sesi == 'sudah_selesai'">
+                <h4 class="alert-heading"><i class="bi bi-stars me-2"></i>Kamu sudah selesai ujian</h4>
+                <p>Ujian berikut sudah kamu tuntaskan, terima kasih sudah mengikuti ujian. Semoga nilainya bagus 😄🫶!</p>
             </div>
 
             <div class="alert alert-warning my-3" v-if="page.props.data_ujian?.status === 0">
@@ -48,9 +53,9 @@
 
             <div class="alert alert-warning my-3" v-if="page.props.data_ujian === false">
                 <h4 class="alert-heading"><i class="bi bi-stars me-2"></i>Sangat Bersemangat ya! 😅</h4>
-                <p>Ujiannya memang belum dimulai sih, tapi kamu bisa coba beberapa saat lagi dengan klik "Lanjutkan". Semangat ujiannya 💪🏻!</p>
+                <p>Belum ada ujian yang mulai, tapi kamu bisa coba beberapa saat lagi 💪🏻!</p>
             </div>
-            <Checkbox v-model="isReady" id="isReady" label="Saya siap untuk melaksanakan ujian"></Checkbox>
+            <Checkbox v-model="isReady" id="isReady" label="Saya siap untuk melaksanakan ujian" v-if="$page.props.data_ujian?.sesi != 'sudah_selesai'"></Checkbox>
             <div v-if="page.props.data_ujian">
 
                 <table style="margin: auto; text-align: left;">
@@ -79,6 +84,11 @@
                         <td>:</td>
                         <td>{{page.props.data_ujian.durasi}} Menit</td>
                     </tr>
+                    <tr v-if="page.props.data_ujian.sesi == 'sudah_selesai'">
+                        <td><b>Waktu Selesai Pengerjaan</b></td>
+                        <td>:</td>
+                        <td>{{page.props.data_ujian.waktu_selesai_pengerjaan}}</td>
+                    </tr>
                 </table>'
             </div>
         </div>
@@ -86,7 +96,7 @@
             <Link :href="route('dashboard')" :only="['data_ujian']" method="post" as="button" class="btn btn-primary btn-lg px-5" :disabled="!isReady" :replace="true" v-if="!isInProgress && (page.props.data_ujian == undefined || page.props.data_ujian == false)">Lanjutkan</Link>
             <div v-if="page.props.data_ujian">
 
-                <Link :href="route('mengerjakan')" method="post" as="button" class="btn btn-primary btn-lg px-5" :disabled="!isReady" v-if="!isInProgress && page.props.data_ujian.status === 1"
+                <Link :href="route('mengerjakan')" method="post" as="button" class="btn btn-primary btn-lg px-5" :disabled="!isReady" v-if="!isInProgress && page.props.data_ujian.status === 1 && $page.props.data_ujian?.sesi != 'sudah_selesai'"
                 :data="{
                     id_murid: page.props.auth.murid.id,
                     id_jadwal: page.props.data_ujian.id_jadwal
