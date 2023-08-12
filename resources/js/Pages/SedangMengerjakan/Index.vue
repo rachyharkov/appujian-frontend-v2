@@ -29,14 +29,6 @@
                 waktu_selesai_unix: new Date(this.waktu_selesai).getTime(),
             }
         },
-        watch: {
-            jawaban_muridd: {
-                handler: function (val) {
-                    console.log(val)
-                },
-                deep: true
-            }
-        },
         methods: {
             selesaikanUjian() {
                 document.getElementById('iwantthistobebackdrop').classList.remove('sidebar-backdrop');
@@ -49,6 +41,14 @@
                     id_ujian: usePage().props.data_jadwal.ujian_id,
                     logged_at: new Date().getTime()
                 }).then((res) => {
+                    Swal.fire({
+                        title: 'Mohon Tunggu',
+                        html: 'Sedang menyimpan pengerjaan',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                        },
+                    });
 
                     if(res.code == 'ERR_NETWORK') {
                         Swal.fire({
@@ -76,16 +76,6 @@
                         replace: true,
                         preserveScroll: true,
                         preserveState: true,
-                        onBefore: () => {
-                            Swal.fire({
-                                title: 'Mohon Tunggu',
-                                html: 'Sedang menyimpan pengerjaan',
-                                allowOutsideClick: false,
-                                didOpen: () => {
-                                    Swal.showLoading()
-                                },
-                            });
-                        },
                         onError: (AxiosError, e) => {
                             console.log(e)
                             console.log(AxiosError)
@@ -198,7 +188,8 @@
                     id_murid: usePage().props.auth.murid.id_murid,
                     id_ujian: usePage().props.data_jadwal.ujian_id,
                     logged_at: new Date().getTime()
-                }); // emit event to update progress header component
+                });
+                // emit event to update progress header component
             }
         },
         mounted() {

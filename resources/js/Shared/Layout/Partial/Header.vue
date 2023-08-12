@@ -72,10 +72,9 @@
     <header>
         <nav class="navbar navbar-light">
             <div class="container d-block">
-                <a href="index.html"><i class="bi bi-chevron-left"></i></a>
-                <a class="navbar-brand ms-4" href="index.html">
-                    <h4 class="d-inline-block" v-if="$page.props.data_ujian != undefined">{{ $page.props.data_ujian.nama }}</h4>
-                    <h4 class="d-inline-block" v-else>e-Ujian</h4>
+                <a class="navbar-brand" href="#">
+                    <h4 class="d-inline-block mt-2" v-if="$page.props.data_ujian != undefined">{{ $page.props.data_ujian.nama }}</h4>
+                    <h4 class="d-inline-block mt-2" v-else>e-Ujian</h4>
                 </a>
                 <div class="dropdown float-end">
                     <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
@@ -89,16 +88,13 @@
                                     <img src="/assets/static/images/faces/1.jpg">
                                 </div>
                                 <div v-if="is_syncing" style="width: 17px; height: 17px; right: 5px; bottom: -1px" class="bg-warning rounded-circle position-absolute text-primary z-index-1 anim-rotate">
-                                    <i class="bi bi-arrow-repeat text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"
-                                    ></i>
+                                    <i class="bi bi-arrow-repeat text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"></i>
                                 </div>
                                 <div v-if="sync_result == 'success' " style="width: 17px; height: 17px; right: 5px; bottom: -1px" class="bg-success rounded-circle position-absolute text-primary z-index-1">
-                                    <i class="bi bi-check text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"
-                                    ></i>
+                                    <i class="bi bi-check text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"></i>
                                 </div>
                                 <div v-if="sync_result == 'failed' " style="width: 17px; height: 17px; right: 5px; bottom: -1px" class="bg-danger rounded-circle position-absolute text-primary z-index-1">
-                                    <i class="bi bi-cloud-slash-fill text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"
-                                    ></i>
+                                    <i class="bi bi-cloud-slash-fill text-white position-relative" style="font-size: 0.8rem; margin-left: 0.14rem; top: -0.36rem;"></i>
                                 </div>
                             </div>
                         </div>
