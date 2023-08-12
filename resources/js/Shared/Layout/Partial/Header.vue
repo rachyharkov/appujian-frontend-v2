@@ -55,9 +55,12 @@
         mounted() {
             // console.log(this.emitter)
             dynamicEventBus.on('syncProgressHeader', e => this.syncProgressnya(e));
+            dynamicEventBus.on('syncProgressHeaderSetToNull', e => this.sync_result = null);
+
         },
         unmounted() {
             dynamicEventBus.off('syncProgressHeader',e => this.syncProgressnya(e));
+            dynamicEventBus.off('syncProgressHeaderSetToNull', e => this.sync_result = null);
         },
         components: {
             Link
@@ -143,5 +146,3 @@
         text-wrap: balance;
     }
 </style>
-@/utils/helper/localEventBus
-@/utils/helper/dynamicEventBus.js

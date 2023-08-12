@@ -12,7 +12,7 @@ interface UjianInterface
 
     public function buatSesiUjianBaru($id_murid, $id_ujian);
 
-    public function selesaiUjian($id_murid, $id_ujian, $data_jawaban);
+    public function selesaiUjian($id_murid, $id_ujian);
 
     // public function mulaiUjian($request) : self;
 

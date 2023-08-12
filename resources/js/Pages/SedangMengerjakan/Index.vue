@@ -1,18 +1,23 @@
-<script setup>
+<script>
     import { Link, router, usePage } from '@inertiajs/vue3';
     import AppHead from '@/Shared/Components/AppHead.vue';
     import Checkbox from '@/Shared/Components/Form/Checkbox.vue'
     import SoalPilihanGandaLayout from '@/Shared/Layout/SoalPilihanGandaLayout.vue';
     import SoalEssayLayout from '@/Shared/Layout/SoalEssayLayout.vue';
     import dynamicEventBus from '@/utils/helper/dynamicEventBus.js';
-    import { checkProgress, finishExam } from '@/utils/helper/syncProgress.js';
+    import { checkProgress, finishExam, syncProgress } from '@/utils/helper/syncProgress.js';
     import Swal from 'sweetalert2';
     import { toastAlert } from '@/utils/helper/sweetalert';
-</script>
-
-<script>
 
     export default {
+        setup() {
+            const waktu_selesai = usePage().props.data_jadwal.waktu_selesai;
+            // const waktu_selesai = '2023-08-12 09:04:15';
+
+            return {
+                waktu_selesai
+            }
+        },
         data() {
             return {
                 nomor: 0,
@@ -21,8 +26,8 @@
                 timer_interval: null,
                 sisa_waktu: '',
                 sisa_waktu_unix: 0,
-                waktu_selesai: usePage().props.data_jadwal.waktu_selesai,
-                waktu_selesai_unix: new Date(usePage().props.data_jadwal.waktu_selesai).getTime(),
+                waktu_selesai: this.waktu_selesai,
+                waktu_selesai_unix: new Date(this.waktu_selesai).getTime(),
             }
         },
         watch: {
@@ -34,6 +39,79 @@
             }
         },
         methods: {
+            selesaikanUjian() {
+                syncProgress({
+                    jawaban_murid: {
+                        pilgan: this.jawaban_murid_pilgan,
+                        essay: this.jawaban_murid_essay
+                    },
+                    id_murid: usePage().props.auth.murid.id_murid,
+                    id_ujian: usePage().props.data_jadwal.ujian_id,
+                    logged_at: new Date().getTime()
+                }).then((res) => {
+
+                    if(res.code == 'ERR_NETWORK') {
+                        Swal.fire({
+                            title: 'Oopss!',
+                            text: 'Tidak dapat tersambung ke server, klik tombol di bawah untuk mengulangi',
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Coba Lagi',
+                            allowOutsideClick: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                this.selesaikanUjian()
+                            }
+                        })
+
+                        return false;
+                    }
+
+                    router.visit(route('finish-exam'), {
+                        method: 'post',
+                        data: {
+                            id_murid: usePage().props.auth.murid.id_murid,
+                            id_ujian: usePage().props.data_jadwal.ujian_id,
+                        },
+                        replace: true,
+                        preserveScroll: true,
+                        preserveState: true,
+                        onBefore: () => {
+                            Swal.fire({
+                                title: 'Mohon Tunggu',
+                                html: 'Sedang menyimpan pengerjaan',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading()
+                                },
+                            });
+                        },
+                        onError: (AxiosError, e) => {
+                            console.log(e)
+                            console.log(AxiosError)
+                        },
+                        onSuccess: () => {
+                            dynamicEventBus.emit('syncProgressHeaderSetToNull')
+                            Swal.close()
+                        }
+                    })
+                }).catch((err) => {
+                    Swal.fire({
+                        title: 'Oopss!',
+                        text: 'Terdapat masalah saat mencoba menyimpan jawaban kamu, silahkan coba lagi',
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Coba Lagi',
+                        allowOutsideClick: false,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.selesaikanUjian()
+                        }
+                    })
+                })
+
+
+            },
             dijawab(id_soal,type_soal, jawaban) {
                 // console.log(id_soal, jawaban)
                 if (type_soal == 'pilgan') {
@@ -55,31 +133,11 @@
                     confirmButtonText: 'Ya, selesai ujian!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        Swal.fire({
-                            title: 'Mohon Tunggu',
-                            html: 'Sedang menyimpan pengerjaan',
-                            allowOutsideClick: false,
-                            didOpen: () => {
-                                Swal.showLoading()
-                            },
-                        });
-
-                        router.visit(route('finish-exam'), {
-                            method: 'post',
-                            data: {
-                                jawaban_murid: {
-                                    pilgan: this.jawaban_murid_pilgan,
-                                    essay: this.jawaban_murid_essay
-                                },
-                                id_murid: usePage().props.auth.murid.id_murid,
-                                id_ujian: usePage().props.data_jadwal.ujian_id,
-                                logged_at: new Date().getTime()
-                            },
-                            replace: true,
-                            onFinish: () => {
-                                Swal.close()
-                            }
-                        })
+                        try {
+                            this.selesaikanUjian()
+                        } catch(e) {
+                            console.log(e)
+                        }
                     }
                 })
             },
@@ -120,6 +178,11 @@
                     this.sisa_waktu = 'Waktu Habis'
 
                     console.log('mengumpulkan jawaban...')
+                    try {
+                        this.selesaikanUjian()
+                    } catch(e) {
+                        console.log(e)
+                    }
                     // var last_jawaban = getJawabannya();
                     // Livewire.emit('selesaikanUjian', last_jawaban);
                 }
@@ -139,7 +202,7 @@
             }
         },
         mounted() {
-            // this.timer_interval = setInterval(this.onInterval, 1000);
+            this.timer_interval = setInterval(this.onInterval, 1000);
             checkProgress(
                 {
                     id_murid: usePage().props.auth.murid.id_murid,

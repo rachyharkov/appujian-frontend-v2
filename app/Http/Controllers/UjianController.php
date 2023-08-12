@@ -33,8 +33,7 @@ class UjianController extends Controller
     {
         $this->ujianService->selesaiUjian(
             $request->id_murid,
-            $request->id_ujian,
-            $request->jawaban_murid
+            $request->id_ujian
         );
         return Inertia::render('Selesai/Index');
     }

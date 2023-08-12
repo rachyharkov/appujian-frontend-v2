@@ -4,7 +4,6 @@ export async function syncProgress(data) {
     // make api request to store data
 
     try {
-
         localStorage.setItem('progress', JSON.stringify(data.jawaban_murid));
         localStorage.setItem('id_murid', data.id_murid);
         localStorage.setItem('id_ujian', data.id_ujian);
