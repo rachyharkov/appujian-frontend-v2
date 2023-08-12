@@ -25,10 +25,12 @@
         <div class="col-lg-5 col-12">
             <div id="auth-left">
                 <div class="auth-logo">
-                    <a href="/"><img src="assets/compiled/svg/logo.svg" alt="Logo"></a>
+                    <a href="/"></a>
                 </div>
-                <h1 class="auth-title">Log in.</h1>
-
+                <h1 class="auth-title">e-Ujian.</h1>
+                <p class="auth-subtitle mb-5" style="font-size: 18px; line-height: 1.8rem;">
+                    Silahkan masukan data login kamu, jika terjadi masalah silahkan hubungi pengawas ujian di ruangan.
+                </p>
                 <div class="alert alert-danger" v-if="form.hasErrors">
                     <ul class="list-unstyled mb-0">
                         <li v-for="message in form.errors" :key="message">{{ message }}</li>
@@ -54,15 +56,12 @@
                     <div class="form-check form-check-lg d-flex align-items-end">
                         <input class="form-check-input me-2" type="checkbox" id="checkKeepMeLoggedIn" v-model="form.remember" name="remember">
                         <label class="form-check-label text-gray-600" for="checkKeepMeLoggedIn">
-                            Keep me logged in
+                            Ingat data login ku
                         </label>
                     </div>
                     <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5" type="submit" :disabled="form.processing"
-                    >Log in</button>
+                    >Masuk</button>
                 </form>
-                <div class="text-center mt-5 text-lg fs-4">
-                    <p><a class="font-bold" href="#">Forgot password?</a></p>
-                </div>
             </div>
         </div>
         <div class="col-lg-7 d-none d-lg-block">

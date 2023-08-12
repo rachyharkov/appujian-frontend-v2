@@ -243,6 +243,9 @@
                 console.log(err)
             })
         },
+        unmounted() {
+            clearInterval(this.timer_interval)
+        },
         components: {
             AppHead,
             SoalPilihanGandaLayout,
