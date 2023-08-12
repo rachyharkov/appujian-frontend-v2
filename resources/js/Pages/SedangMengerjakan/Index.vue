@@ -1,7 +1,7 @@
 <script>
     import { Link, router, usePage } from '@inertiajs/vue3';
     import AppHead from '@/Shared/Components/AppHead.vue';
-    import Checkbox from '@/Shared/Components/Form/Checkbox.vue'
+    import NavigasiSoal from '@/Shared/Components/NavigasiSoal.vue';
     import SoalPilihanGandaLayout from '@/Shared/Layout/SoalPilihanGandaLayout.vue';
     import SoalEssayLayout from '@/Shared/Layout/SoalEssayLayout.vue';
     import dynamicEventBus from '@/utils/helper/dynamicEventBus.js';
@@ -12,7 +12,6 @@
     export default {
         setup() {
             const waktu_selesai = usePage().props.data_jadwal.waktu_selesai;
-            // const waktu_selesai = '2023-08-12 09:04:15';
 
             return {
                 waktu_selesai
@@ -40,6 +39,7 @@
         },
         methods: {
             selesaikanUjian() {
+                document.getElementById('iwantthistobebackdrop').classList.remove('sidebar-backdrop');
                 syncProgress({
                     jawaban_murid: {
                         pilgan: this.jawaban_murid_pilgan,
@@ -255,7 +255,8 @@
         components: {
             AppHead,
             SoalPilihanGandaLayout,
-            SoalEssayLayout
+            SoalEssayLayout,
+            NavigasiSoal
         }
     }
 </script>
@@ -271,7 +272,7 @@
                         <span class="badge bg-primary rounded-pill">{{ Object.keys(jawaban_murid_pilgan).length + Object.keys(jawaban_murid_essay).length }} dari {{ $page.props.soals.length }} Terisi</span>
                     </div>
                     <hr class="my-3">
-                    <div class="d-flex flex-justify-between gap-1">
+                    <div class="d-none d-md-flex flex-justify-between gap-1">
                         <button v-for="i in $page.props.soals.length" :key="i" class="btn"
                         :class="{'btn-primary': nomor == i - 1, 'btn-outline-primary': nomor != i - 1}"
                         @click="nomor = i - 1">{{ i }}</button>
@@ -294,6 +295,7 @@
             <button class="btn btn-success" v-if="nomor == $page.props.soals.length - 1" @click="confirmSelesaiUjian">Selesai</button>
         </div>
     </div>
+    <NavigasiSoal :soals="$page.props.soals" :current-nomor="nomor" @change-soal="nomor = $event" />
 </template>
 
 <style scoped>
@@ -325,5 +327,3 @@
     }
 
 </style>
-@/utils/helper/localEventBus
-@/utils/helper/dynamicEventBus.js@/utils/helper/dynamicEventBus.js
