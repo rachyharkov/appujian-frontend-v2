@@ -266,9 +266,9 @@
                         <span class="badge bg-primary rounded-pill">{{ Object.keys(jawaban_murid_pilgan).length + Object.keys(jawaban_murid_essay).length }} dari {{ $page.props.soals.length }} Terisi</span>
                     </div>
                     <hr class="my-3">
-                    <div class="d-none d-md-flex flex-justify-between gap-1">
+                    <div class="d-none d-md-flex flex-justify-between gap-2 flex-wrap">
                         <button v-for="i in $page.props.soals.length" :key="i" class="btn"
-                        :class="{'btn-primary': nomor == i - 1, 'btn-outline-primary': nomor != i - 1}"
+                        :class="{'btn-primary': nomor == i - 1, 'btn-outline-primary': nomor != i - 1}" style="width: 50px;"
                         @click="nomor = i - 1">{{ i }}</button>
                     </div>
                 </div>

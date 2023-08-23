@@ -16,7 +16,7 @@ createInertiaApp({
     resolve: async name => {
         const pages = await import.meta.glob('./Pages/**/*.vue', { eager: true })
         const page = pages[`./Pages/${name}.vue`]
-        // console.log(page)
+
         if (page && page.default) {
             page.default.layout = page.default.layout || AuthenticatedLayout
         }
