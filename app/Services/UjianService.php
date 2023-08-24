@@ -102,6 +102,7 @@ class UjianService implements UjianInterface
         // Labeli
         foreach($soalPilgan as $key => $value) {
             $soalPilgan[$key]['type_soal'] = 'pilgan';
+            $soalPilgan[$key]['image'] = env('APP_PUSAT_DATA_URL') .'/storage/soal_image/'. $value['image'];
         }
 
         foreach($soalEssay as $key => $value) {
