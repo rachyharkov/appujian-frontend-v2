@@ -9,6 +9,7 @@ use App\Models\SoalEssay;
 use App\Models\SoalPilgan;
 use App\Models\Ujian;
 use Carbon\Carbon;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Auth;
 
 class UjianService implements UjianInterface
@@ -102,7 +103,8 @@ class UjianService implements UjianInterface
         // Labeli
         foreach($soalPilgan as $key => $value) {
             $soalPilgan[$key]['type_soal'] = 'pilgan';
-            $soalPilgan[$key]['image'] = $value['image'] ? env('APP_PUSAT_DATA_URL') .'/storage/soal_image/'. $value['image'] : null;
+
+            $soalPilgan[$key]['image'] = $value['image'] ? Image::make(file_get_contents(env('APP_PUSAT_DATA_URL') .'/storage/soal_image/'. $value['image']))->encode('data-url', 40)->getEncoded() : null;
         }
 
         foreach($soalEssay as $key => $value) {
